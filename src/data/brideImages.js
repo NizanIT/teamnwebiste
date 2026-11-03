@@ -4,7 +4,7 @@ import { images } from "./images";
 const slot = (file, fallback = null) => ({ src: `/brides/${file}`, fallback });
 
 export const brideImages = {
-  hero: slot("bride-magenta-saree-cutout.webp"),
+  hero: slot("hero-bg.webp"),
   intro: slot("bride-red-saree-closeup.jpg", images.christianGlow),
   recent: [
     slot("bride-red-saree-garden.jpg", images.traditionalArtistry),

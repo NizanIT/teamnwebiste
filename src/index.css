@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  /* Brand colours */
+  --color-burgundy: #4d0f1f;
+  --color-burgundy-dark: #3a0a17;
+  --color-wine: #5f1a2c;
+
+  /* Backgrounds */
+  --color-ivory: #fffdf9;
+  --color-cream: #f7f2ed;
+  --color-blush: #f7edea;
+
+  /* Accents */
+  --color-champagne: #eadbcb;
+  --color-dusty-rose: #b76e79;
+
+  /* Typography */
+  --color-ink: #2a0b13;
+
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "Jost", sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    line-height: 1.05;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}

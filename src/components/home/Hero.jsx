@@ -1,12 +1,42 @@
+import { useEffect, useState } from "react";
 import Container from "../common/Container";
 import ImageFrame from "../common/ImageFrame";
-import QuickBooking from "./QuickBooking";
 import { brideImages } from "../../data/brideImages";
 
 const stats = [
-  { value: "10+", label: "years of expertise" },
-  { value: "1,000+", label: "brides" },
+  { value: 1000, suffix: "+", label: "brides styled" },
+  { value: 10, suffix: "+", label: "years of expertise" },
 ];
+
+function useCountUp(target, duration = 1800) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let frame;
+    const start = performance.now();
+    const tick = (now) => {
+      const progress = reduceMotion ? 1 : Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [target, duration]);
+
+  return count;
+}
+
+function StatNumber({ value, suffix = "" }) {
+  const count = useCountUp(value);
+  return (
+    <span className="block font-heading text-4xl font-medium tabular-nums lining-nums text-burgundy">
+      {count.toLocaleString("en-US")}
+      {suffix}
+    </span>
+  );
+}
 
 export default function Hero() {
   return (
@@ -27,18 +57,14 @@ export default function Hero() {
             defined.
           </h1>
           <p className="mt-7 max-w-md text-lg leading-relaxed">
-            Luxury bridal makeup and hairstyling by Feeniya Nizan, for brides in Kerala and across the world.
+            Luxury bridal makeup and hairstyling by Feeniya Nizan, for brides in Kerala and across
+            the world.
           </p>
 
-          <div className="mt-9 max-w-xl">
-            <QuickBooking />
-            <p className="mt-3 text-sm text-ink/70">No login needed. Pick your date and book online.</p>
-          </div>
-
           <div className="mt-9 flex items-center gap-10">
-            {stats.map(({ value, label }, index) => (
+            {stats.map(({ value, suffix, label }, index) => (
               <div key={label} className={index > 0 ? "border-l border-ink/20 pl-10" : ""}>
-                <span className="block font-heading text-4xl font-medium lining-nums text-burgundy">{value}</span>
+                <StatNumber value={value} suffix={suffix} />
                 <span className="text-[15px]">{label}</span>
               </div>
             ))}

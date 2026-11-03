@@ -5,6 +5,7 @@ import Container from "../common/Container";
 import { images } from "../../data/images";
 import ArrowLink from "../common/ArrowLink";
 import { LuMenu } from "react-icons/lu";
+import { IoMdClose } from "react-icons/io";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,23 +39,38 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <ArrowLink to="/book" variant="solid" className="hidden sm:inline-flex">
+          <ArrowLink to="/book" variant="solid" className="max-lg:hidden">
             Check availability
           </ArrowLink>
           <button
             onClick={() => setMenuOpen((open) => !open)}
-            className="text-burgundy lg:hidden"
-            aria-label="Toggle menu"
+            className="relative h-8 w-8 text-2xl text-burgundy lg:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
-            <LuMenu />
+            <LuMenu
+              aria-hidden="true"
+              className={`absolute inset-0 m-auto transition-all duration-300 ${
+                menuOpen ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100"
+              }`}
+            />
+            <IoMdClose
+              aria-hidden="true"
+              className={`absolute inset-0 m-auto transition-all duration-300 ${
+                menuOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0"
+              }`}
+            />
           </button>
         </div>
       </Container>
 
       <div
-        className={`fixed inset-x-0 bottom-0 top-[72px] z-40 flex flex-col gap-6 bg-ivory px-5 pt-10 transition-transform duration-300 lg:hidden ${
-          menuOpen ? "translate-y-0" : "-translate-y-[120%]"
+        id="mobile-menu"
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+        className={`fixed inset-x-0 bottom-0 top-24 z-40 flex flex-col gap-6 bg-ivory px-5 pt-10 transition-all duration-300 ease-out lg:hidden ${
+          menuOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-3 opacity-0"
         }`}
       >
         {navLinks.map((link) => (

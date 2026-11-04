@@ -40,7 +40,7 @@ function StatNumber({ value, suffix = "" }) {
 
 export default function Hero() {
   return (
-    <section className="relative bg-ivory lg:h-[min(56.25vw,820px)] lg:min-h-[640px]">
+    <section id="hero" className="relative bg-ivory lg:h-[min(56.25vw,820px)] lg:min-h-[640px]">
       <div className="lg:absolute lg:inset-0">
         <ImageFrame
           image={brideImages.hero}
@@ -50,7 +50,7 @@ export default function Hero() {
       </div>
 
       <Container className="relative lg:flex lg:h-full lg:items-center">
-        <div className="py-12 lg:w-1/2 lg:py-16">
+        <div className="py-12 lg:w-1/2 lg:py-16 pt-20 lg:pt-24">
           <h1 className="font-heading text-6xl font-medium leading-[0.95] tracking-tight text-burgundy lg:text-[clamp(64px,5.4vw,96px)]">
             Bridal beauty,
             <br />

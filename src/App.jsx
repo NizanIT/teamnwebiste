@@ -3,7 +3,9 @@ import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Portfolio from "./pages/Portfolio";
 import ContactPage from "./pages/Contact";
-import ComingSoon from "./pages/ComingSoon";
+import Packages from "./pages/Packages";
+import Book from "./pages/Book";
+import Policies from "./pages/Policies";
 
 export default function App() {
   return (
@@ -13,9 +15,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/packages" element={<ComingSoon title="Packages" />} />
-          <Route path="/book" element={<ComingSoon title="Book your date" />} />
-          <Route path="/policies" element={<ComingSoon title="Policies" />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route path="/book" element={<Book />} />
+          <Route path="/policies" element={<Policies />} />
         </Route>
       </Routes>
     </BrowserRouter>

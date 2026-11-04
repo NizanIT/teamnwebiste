@@ -3,38 +3,50 @@ import Container from "../common/Container";
 import ArrowLink from "../common/ArrowLink";
 import { getNextAvailableDates, toISODate } from "../../data/availability";
 
-const weekday = (d) => d.toLocaleDateString("en-GB", { weekday: "short" });
+const weekday = (d) => d.toLocaleDateString("en-GB", { weekday: "long" });
 const dayMonth = (d) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
 export default function AvailabilityStrip() {
   const dates = getNextAvailableDates(4);
 
   return (
-    <section className="bg-blush">
-      <Container className="flex flex-col gap-6 py-8 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h2 className="font-heading text-3xl text-ink">Next available dates</h2>
-          <p className="text-sm">Book your bridal look on an upcoming date.</p>
+    <section className="border-y border-ink/10 bg-cream">
+      <Container className="flex flex-col gap-6 py-7 lg:flex-row lg:items-center lg:gap-10">
+        {/* Label */}
+        <div className="shrink-0">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-dusty-rose">
+            Open dates
+          </p>
+          <p className="mt-0.5 font-heading text-2xl text-ink">Book your slot</p>
         </div>
 
-        <ul className="flex flex-wrap gap-3">
+        {/* Divider */}
+        <div className="hidden h-10 w-px bg-ink/15 lg:block" aria-hidden="true" />
+
+        {/* Date pills */}
+        <ul className="flex flex-wrap gap-2">
           {dates.map((date) => (
             <li key={toISODate(date)}>
               <Link
                 to={`/book?date=${toISODate(date)}`}
-                className="block min-w-[84px] bg-white px-5 py-3 text-center text-sm font-medium leading-snug transition-colors hover:bg-champagne"
+                className="group flex items-center gap-2 border border-ink/20 bg-ivory px-4 py-2 text-sm font-medium transition-all hover:border-burgundy hover:bg-burgundy hover:text-white"
               >
-                {weekday(date)}
-                <br />
-                {dayMonth(date)}
+                <span className="text-xs font-normal opacity-70 group-hover:opacity-100">
+                  {weekday(date)}
+                </span>
+                <span className="border-l border-ink/20 pl-2 group-hover:border-white/30">
+                  {dayMonth(date)}
+                </span>
               </Link>
             </li>
           ))}
         </ul>
 
-        <ArrowLink to="/book" variant="solid">
-          View calendar
-        </ArrowLink>
+        <div className="lg:ml-auto">
+          <ArrowLink to="/book" variant="solid">
+            View full calendar
+          </ArrowLink>
+        </div>
       </Container>
     </section>
   );

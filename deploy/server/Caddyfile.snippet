@@ -1,0 +1,20 @@
+# The website's site blocks for TeamN's Caddyfile. Add them only AFTER both
+# teamnmakeovers.com and www.teamnmakeovers.com point at 187.127.179.74, and
+# straight away after: Caddy then gets the certificates within seconds. Added
+# before, its certificate attempts fail and back off for minutes to hours.
+# Reload, never restart:
+#   cd ~/whatapp_api_app && docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
+
+teamnmakeovers.com {
+	encode gzip
+	# A deploy swaps the container in about a second; Caddy waits for it
+	# instead of showing an error to anyone loading the page right then.
+	reverse_proxy teamnmakeovers-web:80 {
+		lb_try_duration 10s
+	}
+}
+
+# One address for the site: www sends every link to the same page without it.
+www.teamnmakeovers.com {
+	redir https://teamnmakeovers.com{uri} permanent
+}

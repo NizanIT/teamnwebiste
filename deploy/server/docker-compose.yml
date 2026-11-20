@@ -1,0 +1,31 @@
+# The teamnmakeovers.com website on the shared VPS, beside TeamN Chat, Weddesy
+# and the Nizan CRM. Copy this file to /root/teamnmakeovers/docker-compose.yml
+# (that folder holds only this file; the server never clones the repo).
+# Deploys go through /usr/local/bin/site-deploy, never `docker compose pull`.
+#
+# Rules of the shared server that this file keeps:
+#   • no published ports. TeamN's Caddy owns 80/443 and reaches this over its
+#     network by the name teamnmakeovers-web
+#   • a unique name, never `app`, `caddy` or `web`
+#   • limits, log rotation and a restart policy
+
+name: teamnmakeovers
+
+services:
+  site:
+    image: ghcr.io/nizanit/teamnwebiste-web:latest
+    restart: unless-stopped
+    init: true
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+    expose: ["80"]
+    mem_limit: 64m
+    cpus: 0.25
+    networks:
+      teamn_web: { aliases: [teamnmakeovers-web] }
+
+networks:
+  teamn_web:
+    external: true
+    name: whatapp_api_app_default   # TeamN's network, where its Caddy lives

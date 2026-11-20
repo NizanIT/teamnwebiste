@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { MdLocationOn, MdCall, MdMail } from "react-icons/md";
-import { GOOGLE_SCRIPT_URL } from "../../config/config";
+import useContact from "../../hooks/useContact";
+import { submitEnquiry } from "../../api/enquiryApi";
+import { trackEvent } from "../../utils/clarity";
+import Honeypot from "../common/Honeypot";
 
 const fieldClass =
   "w-full bg-transparent border-none px-0 py-2 focus:outline-none placeholder-gray-400 text-sm";
@@ -17,6 +20,9 @@ export default function Contact() {
   const [form, setForm] = useState(initialForm);
   const [dateFocused, setDateFocused] = useState(false);
   const [status, setStatus] = useState(null); // { type, text }
+  const contact = useContact();
+  const [startedAt] = useState(() => Date.now());
+  const [honeypot, setHoneypot] = useState("");
 
   const update = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   const updatePhone = (e) => setForm((prev) => ({ ...prev, phone_number: e.target.value.replace(/[^0-9]/g, "") }));
@@ -27,25 +33,24 @@ export default function Contact() {
     e.preventDefault();
     setStatus({ type: "sending", text: "Sending your inquiry..." });
 
+    // The message goes to the CRM (Team N Website → Enquiries, and a Lead).
     try {
-      // GET avoids the CORS pre-flight redirect issue with Google Apps Script
-      const response = await fetch(`${GOOGLE_SCRIPT_URL}?${new URLSearchParams(form)}`, {
-        method: "GET",
-        mode: "cors",
+      const res = await submitEnquiry({
+        type: "contact",
+        name: form.name,
+        email: form.email,
+        phone: form.phone_number,
+        eventDate: form.wedding_date || undefined,
+        message: form.message,
+        startedAt,
+        company: honeypot,
       });
-      if (!response.ok) throw new Error("Network response was not ok");
-      const data = await response.json();
-
-      if (data.result === "success") {
-        setStatus({ type: "success", text: "Thank you! Your inquiry has been sent successfully." });
-        setForm(initialForm);
-        setTimeout(() => setStatus(null), 5000);
-      } else {
-        setStatus({ type: "error", text: "Error: " + (data.message || "Failed to send message.") });
-      }
+      trackEvent("contact_enquiry_sent");
+      setStatus({ type: "success", text: res?.message || "Thank you! Your inquiry has been sent successfully." });
+      setForm(initialForm);
+      setTimeout(() => setStatus(null), 5000);
     } catch (error) {
-      console.error("Submission error:", error);
-      setStatus({ type: "error", text: "An error occurred. Please try again later or contact us directly." });
+      setStatus({ type: "error", text: error?.message || "An error occurred. Please try again later or contact us directly." });
     }
   };
 
@@ -63,7 +68,7 @@ export default function Contact() {
                 <MdLocationOn className="text-2xl text-dusty-rose" />
                 <div>
                   <p className="font-bold uppercase tracking-widest text-xs mb-1">Location</p>
-                  <p className="text-gray-600">Kozhikode, Kerala, India | Destination Weddings Worldwide</p>
+                  <p className="text-gray-600">{contact.address} | Destination Weddings Worldwide</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
@@ -71,8 +76,8 @@ export default function Contact() {
                 <div>
                   <p className="font-bold uppercase tracking-widest text-xs mb-1">Phone</p>
                   <p className="text-gray-600">
-                    <a href="tel:+919645424281" className="hover:text-dusty-rose transition-colors">
-                      +91 96454 24281
+                    <a href={contact.telHref} className="hover:text-dusty-rose transition-colors">
+                      {contact.phone}
                     </a>
                   </p>
                 </div>
@@ -81,14 +86,19 @@ export default function Contact() {
                 <MdMail className="text-2xl text-dusty-rose" />
                 <div>
                   <p className="font-bold uppercase tracking-widest text-xs mb-1">Email</p>
-                  <p className="text-gray-600">inquiry@teamnmakeovers.com</p>
+                  <p className="text-gray-600">
+                    <a href={contact.mailHref} className="hover:text-dusty-rose transition-colors">
+                      {contact.email}
+                    </a>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+            <form onSubmit={handleSubmit} className="relative grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+              <Honeypot value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
               <div className="border-b border-dusty-rose">
                 <input name="name" required className={fieldClass} placeholder="Name" type="text" value={form.name} onChange={update} />
               </div>
@@ -108,7 +118,7 @@ export default function Contact() {
                 />
               </div>
               <div className="border-b border-dusty-rose">
-                <input name="phone_number" className={fieldClass} placeholder="Phone Number" type="tel" value={form.phone_number} onChange={updatePhone} />
+                <input name="phone_number" required className={fieldClass} placeholder="Phone Number *" type="tel" value={form.phone_number} onChange={updatePhone} />
               </div>
               <div className="border-b border-dusty-rose md:col-span-2">
                 <textarea name="message" required className={fieldClass} placeholder="Message" rows={3} value={form.message} onChange={update} />

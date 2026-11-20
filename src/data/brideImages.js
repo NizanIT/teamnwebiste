@@ -1,16 +1,20 @@
-import { images } from "./images";
-
-// Photos live in public/brides/. A slot falls back to an older photo until its own file exists.
-const slot = (file, fallback = null) => ({ src: `/brides/${file}`, fallback });
+// Built-in photos in public/photos/ (resized for fast loading).
+// Anything uploaded in CRM → Team N Website (stored on Cloudinary) replaces these.
+const photo = (file) => ({ src: `/photos/${file}`, fallback: null });
 
 export const brideImages = {
-  hero: slot("hero-bg.webp"),
-  intro: slot("bride-red-saree-closeup.jpg", images.christianGlow),
-  recent: [
-    slot("bride-red-saree-garden.jpg", images.traditionalArtistry),
-    slot("bride-peach-lehenga-portrait.jpg", images.bridalUpdo),
-    slot("bride-plum-gown-window.jpg", images.southIndianBride),
-    slot("bride-white-gown-garden.jpg", images.christianBride),
+  hero: photo("hero-red-saree.jpg"),
+  // Experience section: one   main photo + two smaller ones (collage).
+  intro: photo("intro-red-saree-smile.jpg"),
+  introCollage: [
+    photo("gallery-makeup-pink-kanjeevaram.jpg"),
+    photo("gallery-makeup-window-light.jpg"),
   ],
-  about: slot("feeniya.jpg", images.aboutStylist),
+  recent: [
+    photo("recent-red-saree-portrait.jpg"),
+    photo("recent-burgundy-lehenga.jpg"),
+    photo("recent-christian-gown.jpg"),
+    photo("recent-jasmine-braid.jpg"),
+  ],
+  about: photo("about-feeniya.jpg"),
 };

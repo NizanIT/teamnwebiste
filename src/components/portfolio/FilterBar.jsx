@@ -1,9 +1,7 @@
-import { portfolioFilters } from "../../data/portfolioItems";
-
-export default function FilterBar({ active, onChange }) {
+export default function FilterBar({ filters, active, onChange }) {
   return (
     <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-16">
-      {portfolioFilters.map(({ key, label }) => (
+      {filters.map(({ key, label }) => (
         <button
           key={key}
           onClick={() => onChange(key)}

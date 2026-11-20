@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
 import Container from "../common/Container";
 import ArrowLink from "../common/ArrowLink";
-import { getNextAvailableDates, toISODate } from "../../data/availability";
+import { useAvailability } from "../../hooks/useAvailability";
+import { toISODate } from "../../utils/date";
+import { contentDefaults } from "../../data/content";
+import useSection from "../../hooks/useSection";
 
 const weekday = (d) => d.toLocaleDateString("en-GB", { weekday: "long" });
 const dayMonth = (d) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
 export default function AvailabilityStrip() {
-  const dates = getNextAvailableDates(4);
+  const { getNextOpenDates, loading } = useAvailability();
+  const dates = getNextOpenDates(4);
+  const text = useSection("availabilityStrip", contentDefaults.availabilityStrip);
 
   return (
     <section className="border-y border-ink/10 bg-cream">
@@ -15,15 +20,16 @@ export default function AvailabilityStrip() {
         {/* Label */}
         <div className="shrink-0">
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-dusty-rose">
-            Open dates
+            {text.eyebrow}
           </p>
-          <p className="mt-0.5 font-heading text-2xl text-ink">Book your slot</p>
+          <p className="mt-0.5 font-heading text-2xl text-ink">{text.title}</p>
         </div>
 
         {/* Divider */}
         <div className="hidden h-10 w-px bg-ink/15 lg:block" aria-hidden="true" />
 
         {/* Date pills */}
+        {loading && <p className="text-sm text-ink/50">Checking the calendar…</p>}
         <ul className="flex flex-wrap gap-2">
           {dates.map((date) => (
             <li key={toISODate(date)}>
@@ -44,7 +50,7 @@ export default function AvailabilityStrip() {
 
         <div className="lg:ml-auto">
           <ArrowLink to="/book" variant="solid">
-            View full calendar
+            {text.ctaLabel}
           </ArrowLink>
         </div>
       </Container>

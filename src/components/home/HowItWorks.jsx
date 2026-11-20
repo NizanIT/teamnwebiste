@@ -1,26 +1,12 @@
 import Container from "../common/Container";
 import ArrowLink from "../common/ArrowLink";
-
-const steps = [
-  {
-    title: "Choose package",
-    text: "Browse our Airbrush, Platinum, or Custom packages and pick the one that fits your vision.",
-  },
-  {
-    title: "Pick a date",
-    text: "Check the live calendar and select an available slot that works for your schedule.",
-  },
-  {
-    title: "Pay advance",
-    text: "Secure your date with a small advance — the rest is settled on the day.",
-  },
-  {
-    title: "Get confirmation",
-    text: "Receive your booking reference and all details instantly via WhatsApp and email.",
-  },
-];
+import { contentDefaults } from "../../data/content";
+import useSection from "../../hooks/useSection";
 
 export default function HowItWorks() {
+  const section = useSection("howItWorks", contentDefaults.howItWorks);
+  const steps = section.steps ?? [];
+
   return (
     <section className="bg-blush py-20 lg:py-28">
       <Container>
@@ -28,10 +14,10 @@ export default function HowItWorks() {
         <div className="mb-14 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-dusty-rose">
-              The process
+              {section.eyebrow}
             </p>
             <h2 className="mt-1 font-heading text-4xl leading-[1.05] text-burgundy lg:text-[44px]">
-              How booking works
+              {section.title}
             </h2>
           </div>
           <ArrowLink to="/book" variant="solid">

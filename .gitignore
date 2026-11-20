@@ -7,18 +7,39 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build output (recreated by npm install / npm run build)
 node_modules
 dist
 dist-ssr
+.vite
+coverage
+*.tsbuildinfo
+.eslintcache
+
+# Environment files
+# .env.development and .env.production hold only public settings (API address,
+# live-API switch) and ARE committed — the host builds with .env.production.
+# Never commit secrets: put them in .env or *.local, which stay ignored.
+.env
 *.local
+# Local test-only CMS mock (scripts/mock-cms-server.mjs)
+.env.mock
+scripts/mock-cms-server.mjs
+
+# Tool folders
+.claude/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

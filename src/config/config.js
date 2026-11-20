@@ -1,4 +1,3 @@
-export const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwrGbh2_eEP3U-kuuaSurbHRYBlDVJ0Fd4VhmnXqq2Q35hggzc9_Y7cunQS_9utg86p/exec";
-
-export const WHATSAPP_URL = "https://wa.me/919645424281";
+// Phone, WhatsApp and email come from the CMS "Contact & Footer" section
+// (see src/hooks/useContact.js, defaults in src/data/content/site.js).
+// Packages, prices, advance amounts and availability come only from the CRM.

@@ -1,6 +1,11 @@
 import Container from "../common/Container";
 import ArrowLink from "../common/ArrowLink";
-import { packages, formatPrice } from "../../data/packages";
+import usePackages from "../../hooks/usePackages";
+import DataState from "../common/DataState";
+import { formatPrice } from "../../utils/format";
+import { packageStartingPrice } from "../../utils/pricing";
+import { contentDefaults } from "../../data/content";
+import useSection from "../../hooks/useSection";
 
 const icons = {
   airbrush: (
@@ -24,6 +29,8 @@ const icons = {
 };
 
 export default function PackagesPreview() {
+  const { packages, loading, error } = usePackages();
+  const text = useSection("packagesPreview", contentDefaults.packagesPreview);
   return (
     <section className="bg-cream py-20 lg:py-32">
       <Container>
@@ -31,12 +38,14 @@ export default function PackagesPreview() {
         <div className="mb-12 flex items-end justify-between lg:mb-16">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-dusty-rose">
-              Services
+              {text.eyebrow}
             </p>
-            <h2 className="mt-1 font-heading text-4xl text-burgundy lg:text-[44px]">Our packages</h2>
+            <h2 className="mt-1 font-heading text-4xl text-burgundy lg:text-[44px]">{text.title}</h2>
           </div>
           <ArrowLink to="/packages">View all packages</ArrowLink>
         </div>
+
+        <DataState loading={loading} error={error} empty={!packages.length} emptyText="Packages will be listed here soon." />
 
         {/* Cards */}
         <div className="grid gap-4 md:grid-cols-3 md:gap-0">
@@ -51,7 +60,7 @@ export default function PackagesPreview() {
             >
               {/* Icon */}
               <span className={pkg.highlighted ? "text-champagne" : "text-dusty-rose"}>
-                {icons[pkg.id]}
+                {icons[pkg.id] ?? icons.platinum}
               </span>
 
               {/* Name */}
@@ -61,10 +70,10 @@ export default function PackagesPreview() {
 
               {/* Price */}
               <p className={`mt-2 text-[13px] ${pkg.highlighted ? "text-white/70" : "text-ink/60"}`}>
-                {pkg.from && "Starting from"}
+                Starting from
               </p>
               <p className={`font-heading text-2xl font-medium ${pkg.highlighted ? "text-champagne" : "text-burgundy"}`}>
-                {formatPrice(pkg.price)}
+                {formatPrice(packageStartingPrice(pkg))}
               </p>
 
               {/* Hours */}

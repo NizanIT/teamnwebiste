@@ -13,10 +13,11 @@ export default function AddonGrid({ addons }) {
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-dusty-rose">
               Customise Your Experience
             </p>
-            <h2 className="mt-1 font-heading text-4xl text-burgundy md:text-5xl">À La Carte Add-Ons</h2>
+            <h2 className="mt-1 font-heading text-4xl text-burgundy md:text-5xl">Add-Ons</h2>
           </div>
           <p className="max-w-md text-sm text-ink/70">
-            Enhance any bridal package with tailored styling services for yourself and your entourage.
+            Enhance any bridal package with tailored styling services for yourself and your
+            entourage.
           </p>
         </div>
 
